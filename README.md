@@ -1,3 +1,8 @@
+# Vue 源码解读计划
+
+所有解读文章放置于 [annotated](./annotated/) 文件夹下，不破坏项目原有的分支结构
+
+---
 <p align="center"><a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><img width="100" src="https://vuejs.org/images/logo.png" alt="Vue logo"></a></p>
 
 <p align="center">
