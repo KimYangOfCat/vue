@@ -1,8 +1,10 @@
 const chalk = require('chalk')
+//规范化 commit 信息
 const msgPath = process.env.GIT_PARAMS
 const msg = require('fs').readFileSync(msgPath, 'utf-8').trim()
 
-const commitRE = /^(revert: )?(feat|fix|polish|docs|style|refactor|perf|test|workflow|ci|chore|types|build)(\(.+\))?: .{1,50}/
+//为了更好的整理注释信息，新加了一个 annotate commit 类型
+const commitRE = /^(revert: )?(feat|fix|polish|docs|style|refactor|perf|test|workflow|ci|chore|types|build|annotate)(\(.+\))?: .{1,50}/
 
 if (!commitRE.test(msg)) {
   console.log()
