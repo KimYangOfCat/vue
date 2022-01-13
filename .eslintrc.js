@@ -1,3 +1,5 @@
+// eslint：v5.7.0 配置文件
+// 参考：https://github.com/eslint/eslint/tree/5.x/docs
 module.exports = {
   root: true,
   parserOptions: {

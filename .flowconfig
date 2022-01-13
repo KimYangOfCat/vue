@@ -1,3 +1,6 @@
+# flow 的配置文件，详细的配置项可参考：https://flow.org/en/docs/config/
+# 从 pakcage.json 中获取版本号为：^0.61.0，故更多当时的详细信息可参考：https://github.com/facebook/flow/tree/v0.61
+
 [ignore]
 .*/node_modules/.*
 .*/test/.*
@@ -11,7 +14,12 @@
 flow
 
 [options]
+# 参考：https://github.com/facebook/flow/blob/v0.61/website/en/docs/config/options.md#toc-unsafe-enable-getters-and-setters-boolean
 unsafe.enable_getters_and_setters=true
+# 启用 getter 和 setter
+
+# 参考：https://flow.org/en/docs/config/options/#toc-module-name-mapper-regex-string
+# 下面重命名了一些模块，方便使用：
 module.name_mapper='^compiler/\(.*\)$' -> '<PROJECT_ROOT>/src/compiler/\1'
 module.name_mapper='^core/\(.*\)$' -> '<PROJECT_ROOT>/src/core/\1'
 module.name_mapper='^shared/\(.*\)$' -> '<PROJECT_ROOT>/src/shared/\1'
@@ -20,4 +28,8 @@ module.name_mapper='^weex/\(.*\)$' -> '<PROJECT_ROOT>/src/platforms/weex/\1'
 module.name_mapper='^server/\(.*\)$' -> '<PROJECT_ROOT>/src/server/\1'
 module.name_mapper='^entries/\(.*\)$' -> '<PROJECT_ROOT>/src/entries/\1'
 module.name_mapper='^sfc/\(.*\)$' -> '<PROJECT_ROOT>/src/sfc/\1'
+# 阅读源码的过程重常遇到这些被重命名的模块，可以从此处找到其真实的目录路径，方便理解整个项目的结构。
+
+# 参考：https://flow.org/en/docs/config/options/#toc-suppress-comment-regex
 suppress_comment= \\(.\\|\n\\)*\\$flow-disable-line
+# 定义了一个名为 $flow-disable-line 的 comment，使用它可绕过 flow 的检查。

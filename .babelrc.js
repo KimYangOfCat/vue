@@ -1,3 +1,6 @@
+/**
+ * 参考：https://babeljs.io/docs/en/config-files
+ * */ 
 const babelPresetFlowVue = {
   plugins: [
     require('@babel/plugin-proposal-class-properties'),
