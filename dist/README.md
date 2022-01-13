@@ -1,36 +1,35 @@
-# 构建后的文件
-## Explanation of Build Files
+## 打包文件说明
 
 | | UMD | CommonJS | ES Module |
 | --- | --- | --- | --- |
-| **Full** | vue.js | vue.common.js | vue.esm.js |
-| **Runtime-only** | vue.runtime.js | vue.runtime.common.js | vue.runtime.esm.js |
-| **Full (production)** | vue.min.js | | |
-| **Runtime-only (production)** | vue.runtime.min.js | | |
+| **完整版** | vue.js | vue.common.js | vue.esm.js |
+| **只包含运行时版本** | vue.runtime.js | vue.runtime.common.js | vue.runtime.esm.js |
+| **完整版(生产环境)** | vue.min.js | | |
+| **只包含运行时版本(生产环境)** | vue.runtime.min.js | | |
 
-### Terms
+### 相关名词
 
-- **Full**: builds that contains both the compiler and the runtime.
+- **完整版**：构建后的文件同时包含编译器和运行时。
 
-- **Compiler**: code that is responsible for compiling template strings into JavaScript render functions.
+- **编译器**：负责将模板字符串编译成 JavaScript 渲染函数。
 
-- **Runtime**: code that is responsible for creating Vue instances, rendering and patching virtual DOM, etc. Basically everything minus the compiler.
+- **运行时**：负责创建Vue.js实例，渲染视图和使用虚拟DOM实现重新渲染，基本上包含除编译器外的所有部分。
 
-- **[UMD](https://github.com/umdjs/umd)**: UMD builds can be used directly in the browser via a `<script>` tag. The default file from Unpkg CDN at [https://unpkg.com/vue](https://unpkg.com/vue) is the Runtime + Compiler UMD build (`vue.js`).
+- **[UMD](https://github.com/umdjs/umd)**：UMD版本的文件可以通过 `<script>` 标签直接在浏览器中使用。来自 Unpkg CDN  [https://unpkg.com/vue](https://unpkg.com/vue) 的默认文件是包含运行时+编译器的UMD版本。
 
-- **[CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1)**: CommonJS builds are intended for use with older bundlers like [browserify](http://browserify.org/) or [webpack 1](https://webpack.github.io). The default file for these bundlers (`pkg.main`) is the Runtime only CommonJS build (`vue.runtime.common.js`).
+- **[CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1)**：CommonJS 版本用来配合较旧的打包工具，比如 [browserify](http://browserify.org/) 或 [webpack 1](https://webpack.github.io)。这些打包工具的默认文件（`pkg.main`）只包含运行时的 CommonJS 版本（`vue.runtime.common.js`）
 
-- **[ES Module](http://exploringjs.com/es6/ch_modules.html)**: ES module builds are intended for use with modern bundlers like [webpack 2](https://webpack.js.org) or [rollup](http://rollupjs.org/). The default file for these bundlers (`pkg.module`) is the Runtime only ES Module build (`vue.runtime.esm.js`).
+- **[ES Module](http://exploringjs.com/es6/ch_modules.html)**: ES Module版本用来配合现代打包工具，比如 [webpack 2](https://webpack.js.org) 或 [rollup](http://rollupjs.org/)。这些打包工具的默认文件（`pkg.module`）只包含运行时的ES Module版本（`vue.runtime.esm.js`）。
 
-### Runtime + Compiler vs. Runtime-only
+### 运行时 + 编译器 VS 只包含运行时
 
-If you need to compile templates on the fly (e.g. passing a string to the `template` option, or mounting to an element using its in-DOM HTML as the template), you will need the compiler and thus the full build.
+如果需要在客户端编译模板（比如传入一个字符串给 `template` 选项，或挂载到一个元素上并以其 DOM 内部的HTML作为模板），那么需要用到编译器，因此需要完整版：
 
-When using `vue-loader` or `vueify`, templates inside `*.vue` files are compiled into JavaScript at build time. You don't really need the compiler in the final bundle, and can therefore use the runtime-only build.
+当使用 `vue-loader` 或 `vueify` 的时候，`*.vue` 文件内部的模板会在构建时预编译成 JavaScript。所以，最终打包完成的文件实际上是不需要编译器的，只需要引入运行时版本即可。
 
-Since the runtime-only builds are roughly 30% lighter-weight than their full-build counterparts, you should use it whenever you can. If you wish to use the full build instead, you need to configure an alias in your bundler.
+由于运行时版本的体积比完整版要小30%左右，所以应该尽可能使用运行时版本。如果仍然希望使用完整版，则需要在打包工具里配置一个别名。
 
-#### Webpack
+#### 对于 webpack，需要这么处理：
 
 ``` js
 module.exports = {
@@ -43,7 +42,7 @@ module.exports = {
 }
 ````
 
-#### Rollup
+#### 对于 Rollup，需要这么处理：
 
 ``` js
 const alias = require('rollup-plugin-alias')
@@ -58,9 +57,9 @@ rollup({
 })
 ```
 
-#### Browserify
+#### 对于 Browserify
 
-Add to your project's `package.json`:
+需要添加到项目的package.json中：：
 
 ``` js
 {
@@ -71,17 +70,17 @@ Add to your project's `package.json`:
 }
 ```
 
-### Development vs. Production Mode
+### 开发环境 VS 生产环境模式
 
-Development/production modes are hard-coded for the UMD builds: the un-minified files are for development, and the minified files are for production.
+对于 UMD 版本来说，开发环境和生产环境二者的模式都是硬编码的：开发环境下使用未压缩的代码，生产环境下使用压缩后的代码。
 
-CommonJS and ES Module builds are intended for bundlers, therefore we don't provide minified versions for them. You will be responsible for minifying the final bundle yourself.
+CommonJS 和 ES Module 版本用于打包工具，因此 Vue.js 不提供压缩后的版本，需要自行将最终的包进行压缩。
 
-CommonJS and ES Module builds also preserve raw checks for `process.env.NODE_ENV` to determine the mode they should run in. You should use appropriate bundler configurations to replace these environment variables in order to control which mode Vue will run in. Replacing `process.env.NODE_ENV` with string literals also allows minifiers like UglifyJS to completely drop the development-only code blocks, reducing final file size.
+此外，这两个版本同时保留原始的 `process.env.NODE_ENV` 检测，来决定它们应该在什么模式下运行。我们应该使用适当的打包工具配置来替换这些环境变量，以便控制Vue.js所运行的模式。把 `process.env.NODE_ENV` 替换为字符串字面量，同时让 UglifyJS 之类的压缩工具完全删除仅供开发环境的代码块，从而减少最终文件的大小。
 
-#### Webpack
+#### 在 webpack 中
 
-Use Webpack's [DefinePlugin](https://webpack.js.org/plugins/define-plugin/):
+我们使用 [DefinePlugin](https://webpack.js.org/plugins/define-plugin/):
 
 ``` js
 var webpack = require('webpack')
@@ -99,9 +98,9 @@ module.exports = {
 }
 ```
 
-#### Rollup
+#### 在 Rollup 中
 
-Use [rollup-plugin-replace](https://github.com/rollup/rollup-plugin-replace):
+使用 [rollup-plugin-replace](https://github.com/rollup/rollup-plugin-replace)：
 
 ``` js
 const replace = require('rollup-plugin-replace')
@@ -116,9 +115,9 @@ rollup({
 }).then(...)
 ```
 
-#### Browserify
+#### 在 Browserify 中
 
-Apply a global [envify](https://github.com/hughsk/envify) transform to your bundle.
+应用一次全局的 [envify](https://github.com/hughsk/envify) 转换。
 
 ``` bash
 NODE_ENV=production browserify -g envify -e main.js | uglifyjs -c -m > build.js
