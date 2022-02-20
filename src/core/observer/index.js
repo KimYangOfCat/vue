@@ -21,6 +21,7 @@ const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 /**
  * In some cases we may want to disable observation inside a component's
  * update computation.
+ * 某些情况下，我们可能想在一个组件的更新计算中禁用数据侦测
  */
 export let shouldObserve: boolean = true
 
